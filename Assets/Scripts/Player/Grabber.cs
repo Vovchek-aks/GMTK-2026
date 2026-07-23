@@ -36,7 +36,7 @@ namespace Player
                 return;
             }
 
-            var grabbed = interactable.gameObject.GetComponent<ICanBeGrabbed>();
+            var grabbed = interactable?.gameObject.GetComponent<ICanBeGrabbed>();
             if (grabbed == null)
                 return;
 

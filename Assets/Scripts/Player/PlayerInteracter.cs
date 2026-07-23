@@ -26,10 +26,8 @@ namespace Player
                 return;
             
             var interactable = hit.transform.GetComponent<IInteractable>();
-            if (interactable == null)
-                return;
-            
-            interactable.OnInteract(press);
+            interactable?.OnInteract(press);
+
             Interacted?.Invoke(interactable, press);
         }
 
