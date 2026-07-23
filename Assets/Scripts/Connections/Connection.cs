@@ -9,6 +9,9 @@ namespace Connections
         [SerializeField] private Transform target;
         [SerializeField] private Trigger trigger;
         [SerializeField] private float connectionForce;
+
+        public Transform Target => target;
+        public Vector3 Position => _transform.position;
         
         private Rigidbody _rigidbody;
         private Transform _transform;
