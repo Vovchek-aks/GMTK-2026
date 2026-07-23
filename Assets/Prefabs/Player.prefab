@@ -191,7 +191,7 @@ Rigidbody:
   m_GameObject: {fileID: 7453003668402199605}
   serializedVersion: 2
   m_Mass: 85
-  m_Drag: 5
+  m_Drag: 0
   m_AngularDrag: 5
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -222,8 +222,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f58cc51a0e4c6697e44aa65d5ebed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
+  walkSpeed: 7
+  sprintSpeed: 15
+  jumpVerticalSpeed: 7
+  gravity: 13
   targetFlightHeight: 0.5
+  sphereRadius: 0.14
+  airControlRatio: 0.025
 --- !u!114 &7453003668402199613
 MonoBehaviour:
   m_ObjectHideFlags: 0

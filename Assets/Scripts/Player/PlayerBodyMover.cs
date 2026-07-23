@@ -16,6 +16,7 @@ namespace Player
         [SerializeField] private float jumpVerticalSpeed;
         [SerializeField] private float gravity = Physics.gravity.magnitude;
         [SerializeField] private float targetFlightHeight;
+        [SerializeField] private float sphereRadius = 1f;
         [SerializeField] [Range(0, 1)] private float airControlRatio;
 
         private Vector3 _horizontalDirection = Vector3.zero;
@@ -50,9 +51,8 @@ namespace Player
 
         private float GetHeight()
         {
-            const float radius = 1f;
-            var ray = new Ray(Transform.position + Vector3.up * .1f, Vector3.down * radius);
-            if (!Physics.SphereCast(ray, radius, out var hit, targetFlightHeight * 2, 1, 
+            var ray = new Ray(Transform.position + Vector3.up * .1f, Vector3.down * sphereRadius);
+            if (!Physics.SphereCast(ray, sphereRadius, out var hit, targetFlightHeight * 2, 1, 
                     QueryTriggerInteraction.Ignore))
                 return float.PositiveInfinity;
 
