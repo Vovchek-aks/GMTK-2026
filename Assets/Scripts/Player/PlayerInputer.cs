@@ -45,9 +45,6 @@ namespace Player
             InvokeMovement();
             InvokeRotations();
             Cursor.visible = false;
-            
-            if (Keyboard.current.escapeKey.isPressed) // todo: remove
-                Application.Quit();
         }
         
         private void InvokeMovement()
