@@ -52,7 +52,8 @@ namespace Player
         {
             const float radius = 1f;
             var ray = new Ray(Transform.position + Vector3.up * .1f, Vector3.down * radius);
-            if (!Physics.SphereCast(ray, radius, out var hit, targetFlightHeight * 2))
+            if (!Physics.SphereCast(ray, radius, out var hit, targetFlightHeight * 2, 1, 
+                    QueryTriggerInteraction.Ignore))
                 return float.PositiveInfinity;
 
             var rb = hit.transform.GetComponent<ICanBeGrabbed>();

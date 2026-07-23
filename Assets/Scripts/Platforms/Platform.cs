@@ -10,7 +10,6 @@ namespace Platforms
 
         private Transform _transform;
         private Vector3 _lastPosition;
-        private readonly List<Transform> _cargo = new List<Transform>();
 
         private void Awake()
         {
@@ -22,30 +21,8 @@ namespace Platforms
         {
             var delta = _transform.position - _lastPosition;
             _lastPosition = _transform.position;
-            foreach (var element in _cargo) 
+            foreach (var element in trigger.Objects) 
                 element.position += delta;
-        }
-
-        private void OnEntered(Collider other)
-        {
-            _cargo.Add(other.transform);
-        }
-
-        private void OnExited(Collider other)
-        {
-            _cargo.Remove(other.transform);
-        }
-
-        private void OnEnable()
-        {
-            trigger.Entered += OnEntered;
-            trigger.Exited += OnExited;
-        }
-        
-        private void OnDisable()
-        {
-            trigger.Entered -= OnEntered;
-            trigger.Exited -= OnExited;
         }
     }
 }

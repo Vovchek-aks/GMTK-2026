@@ -18,16 +18,11 @@ namespace Player
             _inputer = GetComponent<PlayerInputer>();
         }
 
-        private void OnEnable()
-        {
-            _inputer.NeedToInteract += Interact;
-        }
-
         private void Interact(Interaction press)
         {
             
             var ray = new Ray(head.position, head.forward);
-            if (!Physics.Raycast(ray, out var hit, maxDistance))
+            if (!Physics.Raycast(ray, out var hit, maxDistance, 1, QueryTriggerInteraction.Ignore))
                 return;
             
             var interactable = hit.transform.GetComponent<IInteractable>();
@@ -38,6 +33,11 @@ namespace Player
             Interacted?.Invoke(interactable, press);
         }
 
+        private void OnEnable()
+        {
+            _inputer.NeedToInteract += Interact;
+        }
+        
         private void OnDisable()
         {
             _inputer.NeedToInteract -= Interact;
