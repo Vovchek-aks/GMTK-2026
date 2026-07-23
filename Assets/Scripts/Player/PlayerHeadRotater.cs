@@ -21,6 +21,9 @@ namespace Player
             if (FixedAngle(head.rotation.eulerAngles.x) < .2f)
                 head.rotation = originalRotation;
 
+            if (Vector3.Dot(head.up, Vector3.up) < 0)
+                head.rotation = Quaternion.Euler(Vector3.zero);
+
             _angle = 0;
         }
 

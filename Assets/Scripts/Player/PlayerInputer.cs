@@ -9,8 +9,9 @@ namespace Player
     public class PlayerInputer : MonoBehaviour
     {
         public event Action<Interaction> NeedToInteract;
+        public event Action NeedToJump;
         
-        public event Action<Vector2> NeedToMove; 
+        public event Action<Vector2, bool> NeedToMove; 
         public event Action<float> NeedToRotateBody; 
         public event Action<float> NeedToRotateHead;
 
@@ -29,6 +30,10 @@ namespace Player
         
         private void Awake()
         {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            
             _fpcInputer = new FPCInputer();
             _move = _fpcInputer.KB.Walk;
             
@@ -49,7 +54,7 @@ namespace Player
         {
             var move = _move.ReadValue<Vector2>();
             if (move.sqrMagnitude != 0)
-                NeedToMove?.Invoke(move);
+                NeedToMove?.Invoke(move, _fpcInputer.KB.Sprint.ReadValue<float>() > 0);
         }
         
         private void InvokeRotations()
@@ -64,17 +69,22 @@ namespace Player
         private void InvokeInteraction(InputAction.CallbackContext context) => 
             NeedToInteract?.Invoke(Interaction[context.ReadValue<Vector2>()]);
         
+        private void InvokeJump(InputAction.CallbackContext context) => 
+            NeedToJump?.Invoke();
+        
         private void OnEnable()
         {
             _fpcInputer.Enable();
             _move.Enable();
             
             _fpcInputer.KB.Interact.started += InvokeInteraction;
+            _fpcInputer.KB.Jump.started += InvokeJump;
         }
         
         private void OnDisable()
         {
             _fpcInputer.KB.Interact.started -= InvokeInteraction;
+            _fpcInputer.KB.Jump.started -= InvokeJump;
             
             _move.Disable();
             _fpcInputer.Disable();

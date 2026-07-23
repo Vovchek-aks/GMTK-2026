@@ -33,6 +33,22 @@ public class @FPCInputer : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""993e8d13-36fb-4389-ac10-188b7d3f74a8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""00a5720a-d600-4c0d-b142-aaccc8ff41f0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -200,6 +216,28 @@ public class @FPCInputer : IInputActionCollection, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""abc17790-cf82-4994-b998-0dea57fb96bd"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f1ee765-95d3-4a6a-8434-f244e20fb458"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -210,6 +248,8 @@ public class @FPCInputer : IInputActionCollection, IDisposable
         m_KB = asset.FindActionMap("KB", throwIfNotFound: true);
         m_KB_Walk = m_KB.FindAction("Walk", throwIfNotFound: true);
         m_KB_Interact = m_KB.FindAction("Interact", throwIfNotFound: true);
+        m_KB_Jump = m_KB.FindAction("Jump", throwIfNotFound: true);
+        m_KB_Sprint = m_KB.FindAction("Sprint", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -261,12 +301,16 @@ public class @FPCInputer : IInputActionCollection, IDisposable
     private IKBActions m_KBActionsCallbackInterface;
     private readonly InputAction m_KB_Walk;
     private readonly InputAction m_KB_Interact;
+    private readonly InputAction m_KB_Jump;
+    private readonly InputAction m_KB_Sprint;
     public struct KBActions
     {
         private @FPCInputer m_Wrapper;
         public KBActions(@FPCInputer wrapper) { m_Wrapper = wrapper; }
         public InputAction @Walk => m_Wrapper.m_KB_Walk;
         public InputAction @Interact => m_Wrapper.m_KB_Interact;
+        public InputAction @Jump => m_Wrapper.m_KB_Jump;
+        public InputAction @Sprint => m_Wrapper.m_KB_Sprint;
         public InputActionMap Get() { return m_Wrapper.m_KB; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -282,6 +326,12 @@ public class @FPCInputer : IInputActionCollection, IDisposable
                 @Interact.started -= m_Wrapper.m_KBActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_KBActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_KBActionsCallbackInterface.OnInteract;
+                @Jump.started -= m_Wrapper.m_KBActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_KBActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_KBActionsCallbackInterface.OnJump;
+                @Sprint.started -= m_Wrapper.m_KBActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_KBActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_KBActionsCallbackInterface.OnSprint;
             }
             m_Wrapper.m_KBActionsCallbackInterface = instance;
             if (instance != null)
@@ -292,6 +342,12 @@ public class @FPCInputer : IInputActionCollection, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
             }
         }
     }
@@ -300,5 +356,7 @@ public class @FPCInputer : IInputActionCollection, IDisposable
     {
         void OnWalk(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
     }
 }

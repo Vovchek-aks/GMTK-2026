@@ -1,6 +1,8 @@
 ﻿using System;
 using Interactables;
 using UnityEngine;
+using UnityEngine.Serialization;
+
 // ReSharper disable Unity.PerformanceCriticalCodeInvocation
 
 namespace Player
@@ -8,25 +10,38 @@ namespace Player
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerBodyMover : PlayerMover
     {
-        [SerializeField] private float speed;
+        [FormerlySerializedAs("speed")] 
+        [SerializeField] private float walkSpeed;
+        [SerializeField] private float sprintSpeed;
+        [SerializeField] private float jumpVerticalSpeed;
         [SerializeField] private float gravity = Physics.gravity.magnitude;
         [SerializeField] private float targetFlightHeight;
+        [SerializeField] [Range(0, 1)] private float airControlRatio;
 
-        private Vector3 _direction = Vector3.zero;
+        private Vector3 _horizontalDirection = Vector3.zero;
+        private float _speed = 0;
+        private bool _needToJump = false;
+        private bool _isGrounded = true;
 
         private void FixedUpdate()
         {
-            Rigidbody.velocity = _direction * speed + GetVerticalVelocity(Time.fixedDeltaTime);
-            _direction = Vector3.zero;
+            _isGrounded = IsGrounded();
+            Rigidbody.velocity = _horizontalDirection * _speed + GetVerticalVelocity(Time.fixedDeltaTime);
+            
+            _needToJump = false;
+            if (_isGrounded)
+                _horizontalDirection = Vector3.zero;
         }
 
         private Vector3 GetVerticalVelocity(float dt)
         {
-            var height = GetHeight();
-            if (!IsGrounded(height))
+            if (_needToJump)
+                return Vector3.up * jumpVerticalSpeed;
+            
+            if (Rigidbody.velocity.y > 0 || !_isGrounded)
                 return Vector3.up * (Rigidbody.velocity.y - gravity * dt);
 
-            var delta = height - targetFlightHeight;
+            var delta = GetHeight() - targetFlightHeight;
             return Vector3.down * (delta * 10);
         }
 
@@ -47,25 +62,35 @@ namespace Player
             return hit.distance;
         }
 
-        private void ReceiveMovement(Vector2 direction)
+        private void ReceiveMovement(Vector2 direction, bool isSprinting)
         {
             if (Math.Abs(direction.sqrMagnitude - 1) > .001f)
                 throw new InvalidOperationException(nameof(direction));
-            
-            if (!IsGrounded())
-                return;
             
             var angle = (float) (-Transform.rotation.eulerAngles.y / 180 * Math.PI);
             direction = direction.Rotate(angle);
             var dir3 = new Vector3(direction.x, 0, direction.y);
             
-            _direction = dir3;
+            _horizontalDirection = _isGrounded ? dir3 : _horizontalDirection.Lerp(dir3, airControlRatio);
+            _speed = isSprinting ? sprintSpeed : walkSpeed;
         }
 
-        private void OnEnable() => 
-            Inputer.NeedToMove += ReceiveMovement;
+        private void Jump()
+        {
+            if (_isGrounded)
+                _needToJump = true;
+        }
 
-        private void OnDisable() => 
+        private void OnEnable()
+        {
+            Inputer.NeedToMove += ReceiveMovement;
+            Inputer.NeedToJump += Jump;
+        }
+
+        private void OnDisable()
+        {
             Inputer.NeedToMove -= ReceiveMovement;
+            Inputer.NeedToJump -= Jump;
+        }
     }
 }
