@@ -29,9 +29,9 @@ public class GlobalTimer: MonoBehaviour
         if (RemainingTime <= 0)
             TimeHadPassed?.Invoke();
         
-        var seconds = (int)(RemainingTime % 60);
+        var seconds = (int)((RemainingTime + 1) % 60);
         if (seconds != _lastSeconds)
-            SecondsHadChanged?.Invoke(seconds, (int)(RemainingTime / 60));
+            SecondsHadChanged?.Invoke(seconds, (int)((RemainingTime + 1) / 60));
 
         _lastSeconds = seconds;
     }

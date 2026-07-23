@@ -7,6 +7,7 @@ namespace UI
     public class RemainingTimeVisualiser: MonoBehaviour
     {
         [SerializeField] private Text text;
+        [SerializeField] private Text bigText;
 
         private GlobalTimer _timer;
 
@@ -18,6 +19,12 @@ namespace UI
 
         private void OnSecondsHadChanged(int seconds, int minutes)
         {
+            if (minutes == 0 && seconds <= 10)
+            {
+                text.enabled = false;
+                bigText.enabled = true;
+                bigText.text = $"{seconds}";
+            }
             text.text = $"{minutes}:{seconds:00}";
         }
 
