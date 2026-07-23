@@ -32,4 +32,10 @@ public static class Extensions
     
     public static float GetLerpProgress(this float current, float value, float target) => 
         (current - value) / (target - value);
+
+    public static void Assert(this object _, bool condition, string message = "no message")
+    {
+        if (!condition)
+            throw new Exception($"AssertionError: {message}");
+    }
 }

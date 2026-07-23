@@ -12,9 +12,12 @@ public class Trigger : MonoBehaviour
     
     public Transform Transform { private set; get; }
     
-    private void Awake() => 
+    private void Awake()
+    {
+        this.Assert(GetComponent<Collider>().isTrigger, "isTrigger");
         Transform = transform;
-    
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Objects.Add(other.transform);

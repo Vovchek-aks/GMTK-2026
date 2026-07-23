@@ -76,6 +76,9 @@ namespace Player
             
             _fpcInputer.KB.Interact.started += InvokeInteraction;
             _fpcInputer.KB.Jump.started += InvokeJump;
+            
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
         
         private void OnDisable()
@@ -85,6 +88,9 @@ namespace Player
             
             _move.Disable();
             _fpcInputer.Disable();
+            
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

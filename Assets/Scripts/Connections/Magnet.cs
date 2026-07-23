@@ -11,10 +11,13 @@ namespace Connections
         [SerializeField] private Trigger trigger;
         [SerializeField] private float connectionForce;
         
+        public Transform Transform { private set; get; }
+        
         private Rigidbody _rigidbody;
 
         private void Awake()
         {
+            Transform = transform;
             _rigidbody = GetComponent<Rigidbody>();
         }
 
