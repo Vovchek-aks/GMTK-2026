@@ -29,4 +29,7 @@ public static class Extensions
         progress.Validate(0, 1, nameof(progress));
         return target * progress + value * (1 - progress);
     }
+    
+    public static float GetLerpProgress(this float current, float value, float target) => 
+        (current - value) / (target - value);
 }
