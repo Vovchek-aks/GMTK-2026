@@ -6,7 +6,7 @@ namespace Connections
     [RequireComponent(typeof(Rigidbody))]
     public class Magnet : MonoBehaviour
     {
-        [SerializeField] private Transform target;
+        [field: SerializeField] private Transform Target { set; get; }
         [FormerlySerializedAs("forceTrigger")] 
         [SerializeField] private Trigger trigger;
         [SerializeField] private float connectionForce;
@@ -18,12 +18,17 @@ namespace Connections
             _rigidbody = GetComponent<Rigidbody>();
         }
 
+        public void SetTarget(Transform target)
+        {
+            Target = target;
+        }
+
         private void FixedUpdate()
         {
-            if (!trigger.Objects.Contains(target))
+            if (!trigger.Objects.Contains(Target))
                 return;
 
-            var delta = target.position - trigger.Transform.position;
+            var delta = Target.position - trigger.Transform.position;
             _rigidbody.AddForceAtPosition(delta.normalized * connectionForce, trigger.Transform.position);
         }
     }
