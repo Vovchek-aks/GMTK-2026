@@ -15,6 +15,6 @@ public class SceneSwitcher: MonoBehaviour
     public static void GoToNotWinScene() => 
         SceneManager.LoadScene(sceneBuildIndex: 3);
 
-    public static void Exit() => 
+    public void Exit() => 
         Application.Quit();
 }
